@@ -1,0 +1,32 @@
+name: tests
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pytest httpx
+          pip install passlib==1.7.4 bcrypt==4.0.1 python-jose[cryptography] pydantic-settings sqlalchemy alembic fastapi uvicorn
+
+      - name: Run tests
+        env:
+          JWT_SECRET: ci-secret
+        run: |
+          pytest -q
