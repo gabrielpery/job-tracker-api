@@ -1,17 +1,17 @@
 def test_register_and_login(client):
     # Register
     r = client.post("/api/v1/auth/register", json={
-        "email": "gabriel@test.com",
+        "email": "test@example.com",
         "password": "Password123!"
     })
     assert r.status_code == 200
     data = r.json()
     assert "id" in data
-    assert data["email"] == "gabriel@test.com"
+    assert data["email"] == "test@example.com"
 
     # Login
     r = client.post("/api/v1/auth/login", json={
-        "email": "gabriel@test.com",
+        "email": "test@example.com",
         "password": "Password123!"
     })
     assert r.status_code == 200
@@ -22,11 +22,11 @@ def test_register_and_login(client):
 
 def test_register_duplicate_email(client):
     client.post("/api/v1/auth/register", json={
-        "email": "dup@test.com",
+        "email": "duplicate_email@example.com",
         "password": "Password123!"
     })
     r = client.post("/api/v1/auth/register", json={
-        "email": "dup@test.com",
+        "email": "duplicate_email@example.com",
         "password": "Password123!"
     })
     assert r.status_code == 400
